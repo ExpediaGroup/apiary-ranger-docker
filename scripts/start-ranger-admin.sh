@@ -77,4 +77,7 @@ log4j.additivity.org.hibernate.SQL=false
 EOF
 
 
-java -Dproc_rangeradmin -Dlog4j.configuration=file:${RANGER_ADMIN_HOME}/ews/webapp/WEB-INF/log4j.properties ${JAVA_OPTS} -Duser=${USER} ${DB_SSL_PARAM} -Dservername=rangeradmin -Dlogdir=${RANGER_ADMIN_LOG_DIR} -Dcatalina.base=${XAPOLICYMGR_EWS_DIR} -cp "${XAPOLICYMGR_EWS_DIR}/webapp/WEB-INF/classes/conf:${XAPOLICYMGR_EWS_DIR}/lib/*:${RANGER_JAAS_LIB_DIR}/*:${RANGER_JAAS_CONF_DIR}:${JAVA_HOME}/lib/*:/etc/hadoop/conf/*:$CLASSPATH" org.apache.ranger.server.tomcat.EmbeddedServer
+java -Dproc_rangeradmin -Dlog4j.configuration=file:${RANGER_ADMIN_HOME}/ews/webapp/WEB-INF/log4j.properties ${JAVA_OPTS} \
+-Duser=${USER} ${DB_SSL_PARAM} -Dservername=rangeradmin -Dlogdir=${RANGER_ADMIN_LOG_DIR} -Dcatalina.base=${XAPOLICYMGR_EWS_DIR} \
+-cp "${XAPOLICYMGR_EWS_DIR}/webapp/WEB-INF/classes/conf:${XAPOLICYMGR_EWS_DIR}/lib/*:${RANGER_JAAS_LIB_DIR}/*:${RANGER_JAAS_CONF_DIR}:${JAVA_HOME}/lib/*:/etc/hadoop/conf/*:$CLASSPATH" \
+org.apache.ranger.server.tomcat.EmbeddedServer
