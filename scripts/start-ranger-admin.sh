@@ -47,8 +47,11 @@ EOF
 
 ./setup.sh
 
-#fix ranger audit db entry
-python update_property.py ranger.jpa.audit.jdbc.url "jdbc:log4jdbc:mysql://${db_host}/${db_name}" ./ews/webapp/WEB-INF/classes/conf/ranger-admin-default-site.xml
+#fix ranger db entries
+python update_property.py ranger.jpa.jdbc.url "jdbc:mysql://${db_host}/${db_name}" ./ews/webapp/WEB-INF/classes/conf/ranger-admin-default-site.xml
+python update_property.py ranger.jpa.jdbc.driver "com.mysql.jdbc.Driver" ./ews/webapp/WEB-INF/classes/conf/ranger-admin-default-site.xml
+python update_property.py ranger.jpa.audit.jdbc.url "jdbc:mysql://${db_host}/${db_name}" ./ews/webapp/WEB-INF/classes/conf/ranger-admin-default-site.xml
+python update_property.py ranger.jpa.audit.jdbc.driver "com.mysql.jdbc.Driver" ./ews/webapp/WEB-INF/classes/conf/ranger-admin-default-site.xml
 #grant audit user access
 echo "GRANT INSERT ON ranger.xa_access_audit TO '$audit_db_user'@'%' IDENTIFIED BY '$audit_db_password';"|mysql -h$db_host -u$db_user -p$db_password
 
@@ -71,21 +74,6 @@ log4j.appender.console.layout.ConversionPattern=%d{dd MMM yyyy HH:mm:ss} %5p %c{
 
 log4j.category.org.hibernate.SQL=warn,console
 log4j.additivity.org.hibernate.SQL=false
-
-log4j.category.jdbc.sqlonly=fatal,console
-log4j.additivity.jdbc.sqlonly=false
-
-log4j.category.jdbc.sqltiming=fatal,console
-log4j.additivity.jdbc.sqltiming=false
-
-log4j.category.jdbc.audit=fatal,console
-log4j.additivity.jdbc.audit=false
-
-log4j.category.jdbc.resultset=fatal,console
-log4j.additivity.jdbc.resultset=false
-
-log4j.category.jdbc.connection=fatal,console
-log4j.additivity.jdbc.connection=false
 EOF
 
 
