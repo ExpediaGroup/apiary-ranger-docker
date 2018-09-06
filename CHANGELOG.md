@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- initial commit: See [#1](https://github.com/ExpediaInc/apiary-ranger-docker/issues/1)
-- Dockerfile to build common docker image for running ranger-admin & ranger-userssync
-- ranger-admin & ranger-usersync startup scripts
-- fixes to enable ranger auditing using DB provider.
+- Initial commit: See [#1](https://github.com/ExpediaInc/apiary-ranger-docker/issues/1).
+- Dockerfile to build common docker image for running ranger-admin & ranger-userssync.
+- ranger-admin & ranger-usersync startup scripts.
+- Fixes to enable ranger auditing using DB provider.
