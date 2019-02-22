@@ -4,13 +4,13 @@
 from amazonlinux:latest
 
 ENV VAULT_VERSION 0.10.3
-ENV RANGER_VERSION 1.1.0
+ENV RANGER_VERSION 1.2.0
 ENV MAVEN_VERSION 3.5.4
 
-RUN yum -y install wget tar gzip which git gcc hostname bc procps-ng unzip patch
-RUN yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel mysql-connector-java mysql
+RUN yum -y install wget tar gzip jq which git gcc hostname bc procps-ng unzip patch awscli && \
+    yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel mysql-connector-java mysql && \
+    yum clean all
 
-RUN wget -qN https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && unzip -q -o vault_${VAULT_VERSION}_linux_amd64.zip -d /usr/local/bin/ && rm -f vault_${VAULT_VERSION}_linux_amd64.zip
 RUN wget -q -O - http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz|tar -C /opt -xzf - && ln -sf /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /bin/mvn
 
 COPY files/XAccessAuditService.patch /tmp/XAccessAuditService.patch

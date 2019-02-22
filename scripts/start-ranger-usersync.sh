@@ -4,9 +4,11 @@ source /ranger-common.sh
 
 cd ${RANGER_USERSYNC_HOME}
 
-[[ -z $rangerUsersync_password ]] && export rangerUsersync_password=$(vault read -field=rangerUsersync_password ${vault_path}/ranger_admin)
-[[ -z $SYNC_LDAP_BIND_DN ]] && export SYNC_LDAP_BIND_DN=$(vault read -field=bind_user ${vault_path}/ldap_user)
-[[ -z $SYNC_LDAP_BIND_PASSWORD ]] && export SYNC_LDAP_BIND_PASSWORD=$(vault read -field=bind_password ${vault_path}/ldap_user)
+[[ -z $rangerUsersync_password ]] && export rangerUsersync_password=$(aws secretsmanager get-secret-value --secret-id ${ranger_admin_arn}|jq .SecretString -r|jq .rangerUsersync_password -r)
+[[ -z $SYNC_LDAP_BIND_DN ]] && export SYNC_LDAP_BIND_DN=$(aws secretsmanager get-secret-value --secret-id ${ldap_user_arn}|jq .SecretString -r|jq .username -r)
+#TODO: need to find better way to escape special characters in password
+[[ -z $SYNC_LDAP_BIND_PASSWORD ]] && export SYNC_LDAP_BIND_PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${ldap_user_arn}|jq .SecretString -r|jq .password -r|sed 's/&/\\&/')
+
 
 #edit settings
 sed -i 's/SYNC_SOURCE.*/SYNC_SOURCE=ldap/' install.properties
