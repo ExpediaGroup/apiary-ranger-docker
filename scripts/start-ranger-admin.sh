@@ -3,14 +3,15 @@ set -e
 source /ranger-common.sh
 
 cd ${RANGER_ADMIN_HOME}
-[[ -z $rangerAdmin_password ]] && export rangerAdmin_password=$(vault read -field=rangerAdmin_password ${vault_path}/ranger_admin)
-[[ -z $rangerTagsync_password ]] && export rangerTagsync_password=$(vault read -field=rangerTagsync_password ${vault_path}/ranger_admin)
-[[ -z $rangerUsersync_password ]] && export rangerUsersync_password=$(vault read -field=rangerUsersync_password ${vault_path}/ranger_admin)
-[[ -z $keyadmin_password ]] && export keyadmin_password=$(vault read -field=keyadmin_password ${vault_path}/ranger_admin)
-[[ -z $db_user ]] && export db_user=$(vault read -field=username ${vault_path}/ranger_db_master_user)
-[[ -z $db_password ]] && export db_password=$(vault read -field=password ${vault_path}/ranger_db_master_user)
-[[ -z $audit_db_user ]] && export audit_db_user=$(vault read -field=username ${vault_path}/ranger_db_audit_user)
-[[ -z $audit_db_password ]] && export audit_db_password=$(vault read -field=password ${vault_path}/ranger_db_audit_user)
+[[ -z $rangerAdmin_password ]] && export rangerAdmin_password=$(aws secretsmanager get-secret-value --secret-id ${ranger_admin_arn}|jq .SecretString -r|jq .rangerAdmin_password -r)
+[[ -z $rangerTagsync_password ]] && export rangerTagsync_password=$(aws secretsmanager get-secret-value --secret-id ${ranger_admin_arn}|jq .SecretString -r|jq .rangerTagsync_password -r)
+[[ -z $rangerUsersync_password ]] && export rangerUsersync_password=$(aws secretsmanager get-secret-value --secret-id ${ranger_admin_arn}|jq .SecretString -r|jq .rangerUsersync_password -r)
+[[ -z $keyadmin_password ]] && export keyadmin_password=$(aws secretsmanager get-secret-value --secret-id ${ranger_admin_arn}|jq .SecretString -r|jq .keyadmin_password -r)
+
+[[ -z $db_user ]] && export db_user=$(aws secretsmanager get-secret-value --secret-id ${db_master_user_arn}|jq .SecretString -r|jq .username -r)
+[[ -z $db_password ]] && export db_password=$(aws secretsmanager get-secret-value --secret-id ${db_master_user_arn}|jq .SecretString -r|jq .password -r)
+[[ -z $audit_db_user ]] && export audit_db_user=$(aws secretsmanager get-secret-value --secret-id ${db_audit_user_arn}|jq .SecretString -r|jq .username -r)
+[[ -z $audit_db_password ]] && export audit_db_password=$(aws secretsmanager get-secret-value --secret-id ${db_audit_user_arn}|jq .SecretString -r|jq .password -r)
 
 if [ -z $audit_solr_urls ]; then
     audit_store="db"
@@ -28,8 +29,8 @@ sed -i 's/#setup_mode=SeparateDBA/setup_mode=SeparateDBA/' install.properties
 #    #disable AD ldap referral
 #    sed -i "s/^xa_ldap_ad_referral=.*$/xa_ldap_ad_referral=follow/" install.properties
 #    sed -i "s/^xa_ldap_ad_userSearchFilter=.*$/xa_ldap_ad_userSearchFilter=(sAMAccountName={0})/" install.properties
-#    [[ -z $xa_ldap_ad_bind_dn ]] && export xa_ldap_ad_bind_dn=$(vault read -field=bind_user ${vault_path}/ldap_user)
-#    [[ -z $xa_ldap_ad_bind_password ]] && export xa_ldap_ad_bind_password=$(vault read -field=bind_password ${vault_path}/ldap_user)
+#    [[ -z $xa_ldap_ad_bind_dn ]] && export xa_ldap_ad_bind_dn=$(aws secretsmanager get-secret-value --secret-id ${ldap_user_arn}|jq .SecretString -r|jq .username -r)
+#    [[ -z $xa_ldap_ad_bind_password ]] && export xa_ldap_ad_bind_password=$(aws secretsmanager get-secret-value --secret-id ${ldap_user_arn}|jq .SecretString -r|jq .password -r|sed 's/&/\\&/')
 #fi
 
 #update install.properties using docker env variables
